@@ -1,12 +1,14 @@
 const keyboard = document.querySelector("#keyboard");
 const input = document.querySelector("#input");
+const keys = [];
 let isShiftRight = false;
 let isShiftLeft = false;
-let isCapslock = false;
+let isCapsLock = false;
+let lang = "ru";
 
 class Key {
 
-  constructor( title, code, isDark, width) {
+  constructor(title, code, isDark, width) {
     this.width = width;
     this.isDark = isDark;
     this.code = code;
@@ -35,13 +37,12 @@ class Key {
   }
 
   setMouseEvents() {
-    const btn = this.btn;
-    const onUp = this.onUp;
+    const self = this;
 
     function onMouseUp() {
-      onUp();
-      btn.removeEventListener("mouseup", onMouseUp);
-      btn.removeEventListener("mouseout", onMouseUp);
+      self.onUp();
+      self.btn.removeEventListener("mouseup", onMouseUp);
+      self.btn.removeEventListener("mouseout", onMouseUp);
     }
 
     this.btn.addEventListener("mousedown", () => {
@@ -87,22 +88,119 @@ class ShiftKey extends Key {
 
   press() {
     this.code === "ShiftLeft" ? isShiftLeft = true : isShiftRight = true;
-    
+    for (let key of keys) {
+      if (key.shift) {
+        key.shift();
+      }
+    }
   }
 
   onUp() {
-    btn.classList.remove("active");
+    this.code === "ShiftLeft" ? isShiftLeft = false : isShiftRight = false;
+    this.btn.classList.remove("active");
+
+    if (!isShiftLeft && !isShiftRight) {
+      for (let key of keys) {
+        if (key.unshift) {
+          key.unshift();
+        }
+      }
+    }
+  }
+}
+
+class CapsLock extends Key {
+  constructor() {
+    super("Caps Lock", "CapsLock", true, "large"); 
+  }
+
+  press() {
+    if (isCapsLock) {
+      this.btn.classList.remove("active");
+      isCapsLock = false;
+    } else {
+      this.btn.classList.add("active");
+      isCapsLock = true;
+    }
+    //меняем буквы
+    for (let key of keys) {
+      if (key.caps) {
+        key.caps();
+      }
+    }
+  }
+
+  setMouseEvents() {
+    this.btn.addEventListener("mousedown", () => {
+      this.press();
+    });
+  } 
+
+  setKeyboardEvents() {
+    window.addEventListener('keydown', (event) => {
+      if (event.code === this.code && !event.repeat) {
+        this.press(); 
+      }
+    });
   }
 }
 
 class WritingKey extends Key {
+  constructor(values, code, isDark, width) {
+    let value = values[lang].regular;
+    super(value, code, isDark, width);
+    this.values = values;
+    this.value = value;
+  }
+
   press() {
-   // input.
+    input.value += this.value;
+  }
+
+  shift() {
+    if (this.values[lang].capsable) {
+      this.value = this.values[lang][isCapsLock ? "regular" : "shifted"];
+    } else {
+      this.value = this.values[lang].shifted;
+    }
+    this.title.innerText = this.value;
+  }
+
+  unshift() {
+    if (this.values[lang].capsable) {
+      this.value = this.values[lang][isCapsLock ? "shifted" : "regular"];
+    } else {
+      this.value = this.values[lang].regular;
+    }
+    this.title.innerText = this.value;
+  }
+
+  caps() {
+    if (this.values[lang].capsable) {
+      if (!isShiftLeft && !isShiftRight) {
+        this.unshift();
+      } else {
+        this.shift();
+      }
+    }
   }
 }
 
-const keys = [
-  new WritingKey( "5", "Digit5", true, "large" ),
+keys.push(
+  new WritingKey( {
+    en: {
+      regular: "`",
+      shifted: "~",
+      capsable: false,
+    },
+    ru: {
+      regular: "ё",
+      shifted: "Ё",
+      capsable: true,
+    },
+  }, "Backquote", false ),
+
   new ShiftKey(true),
   new ShiftKey(false),
-];
+  new CapsLock(),
+);
