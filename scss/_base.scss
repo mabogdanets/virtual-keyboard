@@ -1,0 +1,23 @@
+html {
+  font-size: 10px;
+}
+body{
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  color: $color-main;
+  overflow: hidden;
+}
+
+.wrapper {
+  width: 708px;
+  margin: 0 auto;
+
+
+
+  @media screen and (max-width: 767px){
+    min-width: 300px;
+    margin: 0 auto;
+  }
+  
+}
