@@ -373,13 +373,21 @@ body {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 h1.title {
   text-align: center;
 }
 
-#input {
+p {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+}
+
+#textarea {
   border-radius: 0.2rem;
   margin: 0 auto;
   border: 1px #467d9c solid;
@@ -389,6 +397,11 @@ h1.title {
   height: 10rem;
   margin-bottom: 1rem;
   font-size: 1.6rem;
+  resize: none;
+}
+
+#textarea:focus {
+  outline: none;
 }
 
 .keyboard {
@@ -414,7 +427,7 @@ h1.title {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-radius: 10%;
+  border-radius: 5px;
   background-color: #467d9c;
   color: white;
   height: 4rem;
