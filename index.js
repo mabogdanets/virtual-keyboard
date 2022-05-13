@@ -4,6 +4,8 @@ const keys = [];
 let isShiftRight = false;
 let isShiftLeft = false;
 let isCapsLock = false;
+let isCtrl = false;
+let isAlt = false;
 let lang = "ru";
 
 class Key {
@@ -82,9 +84,9 @@ class Key {
 class ShiftKey extends Key {
   constructor(isLeft) {
     if(isLeft) {
-      super("Shift", "ShiftLeft", true, "large"); 
+      super("Shift", "ShiftLeft", true, "shift_left"); 
     } else {
-      super("Shift", "ShiftRight", true);
+      super("Shift", "ShiftRight", true, "shift_right");
     }  
   }
 
@@ -108,6 +110,55 @@ class ShiftKey extends Key {
         }
       }
     }
+  }
+}
+
+class Ctrl extends Key {
+  constructor(isLeft) {
+    if(isLeft) {
+      super("Ctrl", "ControlLeft", true, "medium_ctrl"); 
+    } else {
+      super("Ctrl", "ControlRight", true, "medium_ctrl");
+    }  
+  }
+  press() {
+    isCtrl = true;
+    switchLang();
+  }
+
+  onUp() {
+    this.btn.classList.remove("active");
+    isCtrl = false;   
+  }
+}
+
+class Alt extends Key {
+  constructor(isLeft) {
+    if(isLeft) {
+      super("Alt", "AltLeft", true); 
+    } else {
+      super("Alt", "AltRight", true);
+    }  
+  }
+  press() {
+    isAlt = true;
+    switchLang();
+  }
+  onUp() {
+    this.btn.classList.remove("active");
+    isAlt = false;
+  }
+}
+
+function switchLang() {
+  if (isAlt && isCtrl) {
+    lang = (lang === "en") ? "ru" : "en";
+    for (let key of keys) {
+      if (key.shift) {
+        key.unshift();
+      }
+    }
+    console.log(lang);
   }
 }
 
@@ -150,6 +201,15 @@ class CapsLock extends Key {
 class BackSpace extends Key {
   constructor() {
     super("Back Space", "Backspace", true, "large");
+  }
+  press() {
+    input.value = input.value.slice(0, -1);
+  }
+
+}
+class Del extends Key {
+  constructor() {
+    super("Del", "Delete", true, "del");
   }
   press() {
     input.value = input.value.slice(0, -1);
@@ -237,7 +297,7 @@ class Tab extends WritingKey {
         capsable: false,
       },
     },
-     "Tab", false, "medium");
+     "Tab", true, "medium_tab");
   }
   press() {
     input.value += "  ";
@@ -246,12 +306,36 @@ class Tab extends WritingKey {
   setKeyboardEvents() {
     window.addEventListener('keydown', (event) => {
       if (event.code === this.code) {
-        event.preventDefault()
+        event.preventDefault();
         this.press(); 
       }
     });    
   }
 
+  shift() {};
+  unshift() {};
+  caps() {};
+}
+
+class Enter extends WritingKey {
+  constructor() {
+    super( {
+      en: {
+        regular: "Enter",
+        shifted: "Enter",
+        capsable: false,
+      },
+      ru: {
+        regular: "Enter",
+        shifted: "Enter",
+        capsable: false,
+      },
+    },
+     "Enter", true, "enter");
+  }
+  press() {
+    input.value += "\n";
+  }
   shift() {};
   unshift() {};
   caps() {};
@@ -269,7 +353,7 @@ keys.push(
       shifted: "Ё",
       capsable: true,
     },
-  }, "Backquote", false ),
+  }, "Backquote", true ),
 
   new WritingKey( {
     en: {
@@ -457,6 +541,7 @@ keys.push(
       capsable: true,
     },
   }, "KeyW", false),
+
   new WritingKey( {
     en: {
       regular: "e",
@@ -469,6 +554,7 @@ keys.push(
       capsable: true,
     },
   }, "KeyE", false),
+
   new WritingKey( {
     en: {
       regular: "r",
@@ -476,11 +562,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "к",
+      shifted: "К",
       capsable: true,
     },
   }, "KeyR", false),
+
   new WritingKey( {
     en: {
       regular: "t",
@@ -488,11 +575,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "е",
+      shifted: "Е",
       capsable: true,
     },
   }, "KeyT", false),
+
   new WritingKey( {
     en: {
       regular: "y",
@@ -500,11 +588,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "н",
+      shifted: "Н",
       capsable: true,
     },
   }, "KeyY", false),
+
   new WritingKey( {
     en: {
       regular: "u",
@@ -512,11 +601,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "г",
+      shifted: "Г",
       capsable: true,
     },
   }, "KeyU", false),
+
   new WritingKey( {
     en: {
       regular: "i",
@@ -524,11 +614,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ш",
+      shifted: "Ш",
       capsable: true,
     },
   }, "KeyI", false),
+
   new WritingKey( {
     en: {
       regular: "o",
@@ -536,11 +627,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "щ",
+      shifted: "Щ",
       capsable: true,
     },
   }, "KeyO", false),
+
   new WritingKey( {
     en: {
       regular: "p",
@@ -548,11 +640,12 @@ keys.push(
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "з",
+      shifted: "З",
       capsable: true,
     },
   }, "KeyP", false),
+
   new WritingKey( {
     en: {
       regular: "[",
@@ -560,25 +653,25 @@ keys.push(
       capsable: false,
     },
     ru: {
-      regular: "]",
-      shifted: "}",
-      capsable: false,
+      regular: "х",
+      shifted: "Х",
+      capsable: true,
     },
   }, "BracketLeft", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
-      capsable: true,
+      regular: "]",
+      shifted: "}",
+      capsable: false,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ъ",
+      shifted: "Ъ",
       capsable: true,
     },
   }, "BracketRight", false),
-  
+
   new WritingKey( {
     en: {
       regular: "\\",
@@ -592,279 +685,350 @@ keys.push(
     },
   }, "Backslash", false),
 
+  /// DEL
+  new Del(),
   // ряд три
   new CapsLock(),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "a",
+      shifted: "A",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ф",
+      shifted: "Ф",
       capsable: true,
     },
   }, "KeyA", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "s",
+      shifted: "S",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ы",
+      shifted: "Ы",
       capsable: true,
     },
   }, "KeyS", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "d",
+      shifted: "D",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "в",
+      shifted: "В",
       capsable: true,
     },
   }, "KeyD", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "f",
+      shifted: "F",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "а",
+      shifted: "А",
       capsable: true,
     },
   }, "KeyF", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "g",
+      shifted: "G",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "п",
+      shifted: "П",
       capsable: true,
     },
   }, "KeyG", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "h",
+      shifted: "H",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "р",
+      shifted: "Р",
       capsable: true,
     },
   }, "KeyH", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "j",
+      shifted: "J",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "о",
+      shifted: "О",
       capsable: true,
     },
   }, "KeyJ", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "k",
+      shifted: "K",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "л",
+      shifted: "Л",
       capsable: true,
     },
   }, "KeyK", false),
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "l",
+      shifted: "L",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "д",
+      shifted: "Д",
       capsable: true,
     },
   }, "KeyL", false),
+
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
-      capsable: true,
+      regular: ";",
+      shifted: ":",
+      capsable: false,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ж",
+      shifted: "Ж",
       capsable: true,
     },
   }, "Semicolon", false),
+
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
-      capsable: true,
+      regular: "'",
+      shifted: "\"",
+      capsable: false,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "э",
+      shifted: "Э",
       capsable: true,
     },
   }, "Quote", false),
 
-  //enter
+  new Enter(),
 
   new ShiftKey(true),
   
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "z",
+      shifted: "Z",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "я",
+      shifted: "Я",
       capsable: true,
     },
   }, "KeyZ", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "x",
+      shifted: "X",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ч",
+      shifted: "Ч",
+      capsable: true,
+    },
+  }, "KeyX", false),
+
+  new WritingKey( {
+    en: {
+      regular: "c",
+      shifted: "C",
+      capsable: true,
+    },
+    ru: {
+      regular: "с",
+      shifted: "С",
       capsable: true,
     },
   }, "KeyC", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "v",
+      shifted: "V",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "м",
+      shifted: "М",
       capsable: true,
     },
   }, "KeyV", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "b",
+      shifted: "B",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "и",
+      shifted: "И",
       capsable: true,
     },
   }, "KeyB", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "n",
+      shifted: "N",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "т",
+      shifted: "Т",
       capsable: true,
     },
   }, "KeyN", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: "m",
+      shifted: "M",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ь",
+      shifted: "Ь",
       capsable: true,
     },
   }, "KeyM", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: ",",
+      shifted: "<",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "б",
+      shifted: "Б",
       capsable: true,
     },
   }, "Comma", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
+      regular: ".",
+      shifted: ">",
       capsable: true,
     },
     ru: {
-      regular: "",
-      shifted: "",
+      regular: "ю",
+      shifted: "Ю",
       capsable: true,
     },
   }, "Period", false),
 
   new WritingKey( {
     en: {
-      regular: "",
-      shifted: "",
-      capsable: true,
+      regular: "/",
+      shifted: "?",
+      capsable: false,
     },
     ru: {
-      regular: "",
-      shifted: "",
-      capsable: true,
+      regular: ".",
+      shifted: ",",
+      capsable: false,
     },
   }, "Slash", false),
 
   //arrow top 
+  new WritingKey( {
+    en: {
+      regular: "↑",
+      shifted: "↑",
+      capsable: false,
+    },
+    ru: {
+      regular: "↑",
+      shifted: "↑",
+      capsable: false,
+    },
+  }, "ArrowUp", true),
 
-  new ShiftKey(true),
+  new ShiftKey(false),
 
-  //ctrl
+  new Ctrl(true),
+
   //win(ничего не делает)
-  //alt
+
+  new Alt(true),
   
   new Space(),
 
-  //alt
+  new Alt(false),
+
+
+
   //arrow left
+  new WritingKey( {
+    en: {
+      regular: "←",
+      shifted: "←",
+      capsable: false,
+    },
+    ru: {
+      regular: "←",
+      shifted: "←",
+      capsable: false,
+    },
+  }, "ArrowLeft", true),
+
   //arrow down
+  new WritingKey( {
+    en: {
+      regular: "↓",
+      shifted: "↓",
+      capsable: false,
+    },
+    ru: {
+      regular: "↓",
+      shifted: "↓",
+      capsable: false,
+    },
+  }, "ArrowDown", true),
   //arrow right
-  //ctrl
-  
+   new WritingKey( {
+    en: {
+      regular: "→",
+      shifted: "→",
+      capsable: false,
+    },
+    ru: {
+      regular: "→",
+      shifted: "→",
+      capsable: false,
+    },
+  }, "ArrowRight", true),
+
+  new Ctrl(false),  
 /*
   new WritingKey( {
     en: {

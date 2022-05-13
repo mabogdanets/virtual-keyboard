@@ -451,12 +451,29 @@ p {
   width: 9rem;
 }
 
-.keyboard__btn.enter {
-  width: 8rem;
+.keyboard__btn.shift_left {
+  width: 11rem;
 }
 
-.keyboard__btn.medium {
-  width: 6rem;
+.keyboard__btn.shift_right {
+  width: 6.1rem;
+}
+
+.keyboard__btn.del {
+  min-width: 3rem;
+  width: 35px;
+}
+
+.keyboard__btn.enter {
+  width: 8.1rem;
+}
+
+.keyboard__btn.medium_tab {
+  width: 5rem;
+}
+
+.keyboard__btn.medium_ctrl {
+  width: 6.3rem;
 }
 
 .keyboard__btn.space {

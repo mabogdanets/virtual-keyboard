@@ -59,11 +59,24 @@ p {
   &.large {//back, caps, shift
     width: 9rem;
   }
+  &.shift_left {// shiftLeft
+    width: 11rem;
+  }
+  &.shift_right {// shiftLeft
+    width: 6.1rem;
+  }
+  &.del {
+    min-width: 3rem;
+    width: 35px;
+  }
   &.enter{//enter
-    width: 8rem;
+    width: 8.1rem;
   } 
-  &.medium {//ctrl, tab
-    width: 6rem;
+  &.medium_tab {// tab
+    width: 5rem;
+  }
+  &.medium_ctrl {//ctrl
+    width: 6.3rem;
   }
   &.space {
     width: 30rem;
