@@ -346,7 +346,7 @@ body {
   font-family: 'Roboto', sans-serif;
   font-weight: normal;
   font-style: normal;
-  color: #1e3644;
+  color: #84cab5;
   overflow: hidden;
 }
 
@@ -390,7 +390,7 @@ p {
 #textarea {
   border-radius: 0.2rem;
   margin: 0 auto;
-  border: 1px #467d9c solid;
+  border: 1px #ab97b8 solid;
   -webkit-box-shadow: 1px red;
           box-shadow: 1px red;
   width: 65rem;
@@ -428,7 +428,7 @@ p {
       -ms-flex-align: center;
           align-items: center;
   border-radius: 5px;
-  background-color: #467d9c;
+  background-color: #ab97b8;
   color: white;
   height: 4rem;
   min-width: 4rem;
@@ -444,7 +444,7 @@ p {
 }
 
 .keyboard__btn.dark {
-  background-color: #1e3644;
+  background-color: #84cab5;
 }
 
 .keyboard__btn.large {
@@ -452,7 +452,7 @@ p {
 }
 
 .keyboard__btn.shift_left {
-  width: 11rem;
+  width: 13rem;
 }
 
 .keyboard__btn.shift_right {
@@ -477,7 +477,7 @@ p {
 }
 
 .keyboard__btn.space {
-  width: 30rem;
+  width: 25.6rem;
 }
 
 .keyboard__btn.active {

@@ -8,6 +8,11 @@ let isCtrl = false;
 let isAlt = false;
 let lang = "ru";
 
+window.onunload = function() {
+  // onUp();  
+   console.log("sxdfv");
+ }
+
 class Key {
 
   constructor(title, code, isDark, width) {
@@ -86,7 +91,7 @@ class ShiftKey extends Key {
     if(isLeft) {
       super("Shift", "ShiftLeft", true, "shift_left"); 
     } else {
-      super("Shift", "ShiftRight", true, "shift_right");
+      super("Shift", "ShiftRight", true);
     }  
   }
 
@@ -143,7 +148,9 @@ class Alt extends Key {
   press() {
     isAlt = true;
     switchLang();
+
   }
+
   onUp() {
     this.btn.classList.remove("active");
     isAlt = false;
@@ -203,7 +210,7 @@ class BackSpace extends Key {
     super("Back Space", "Backspace", true, "large");
   }
   press() {
-    input.value = input.value.slice(0, -1);
+   input.setRangeText("", input.selectionStart-1, input.selectionEnd, "end");
   }
 
 }
@@ -212,7 +219,8 @@ class Del extends Key {
     super("Del", "Delete", true, "del");
   }
   press() {
-    input.value = input.value.slice(0, -1);
+    input.setRangeText("", input.selectionStart, input.selectionStart+1, "end");
+
   }
 
 }
@@ -226,8 +234,8 @@ class WritingKey extends Key {
   }
 
   press() {
-   // console.log(input.value, this.value, lang);
-    input.value += this.value;       
+   // input.value += this.value;      
+    input.setRangeText(this.value, input.selectionStart, input.selectionEnd, "end");
   }
 
   shift() {
@@ -278,7 +286,7 @@ class Space extends WritingKey {
      "Space", false, "space");
   }
   press() {
-    input.value += this.value;
+    input.setRangeText(this.value, input.selectionStart, input.selectionEnd, "end");
   }
   shift() {};
   unshift() {};
@@ -300,7 +308,7 @@ class Tab extends WritingKey {
      "Tab", true, "medium_tab");
   }
   press() {
-    input.value += "  ";
+    input.setRangeText("  ", input.selectionStart, input.selectionEnd, "end");
   }
 
   setKeyboardEvents() {
@@ -334,11 +342,20 @@ class Enter extends WritingKey {
      "Enter", true, "enter");
   }
   press() {
-    input.value += "\n";
+    input.setRangeText("\n", input.selectionStart, input.selectionEnd, "end");
   }
   shift() {};
   unshift() {};
   caps() {};
+}
+
+class Win extends Key {
+  constructor() {
+    super("Win", "MetaLeft", true);
+  }
+  press() {
+
+  }
 }
 
 keys.push(
@@ -828,7 +845,7 @@ keys.push(
   new Enter(),
 
   new ShiftKey(true),
-  
+
   new WritingKey( {
     en: {
       regular: "z",
@@ -959,7 +976,6 @@ keys.push(
     },
   }, "Slash", false),
 
-  //arrow top 
   new WritingKey( {
     en: {
       regular: "↑",
@@ -977,7 +993,7 @@ keys.push(
 
   new Ctrl(true),
 
-  //win(ничего не делает)
+  new Win(),
 
   new Alt(true),
   
@@ -986,8 +1002,8 @@ keys.push(
   new Alt(false),
 
 
+  new Ctrl(false),  
 
-  //arrow left
   new WritingKey( {
     en: {
       regular: "←",
@@ -1001,7 +1017,7 @@ keys.push(
     },
   }, "ArrowLeft", true),
 
-  //arrow down
+
   new WritingKey( {
     en: {
       regular: "↓",
@@ -1014,7 +1030,7 @@ keys.push(
       capsable: false,
     },
   }, "ArrowDown", true),
-  //arrow right
+
    new WritingKey( {
     en: {
       regular: "→",
@@ -1028,7 +1044,7 @@ keys.push(
     },
   }, "ArrowRight", true),
 
-  new Ctrl(false),  
+
 /*
   new WritingKey( {
     en: {
